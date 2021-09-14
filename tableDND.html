@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>List Drag N Drop with Last Array And New Array</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+  <style>
+  
+  #sortable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #sortable td, #sortable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    }
+
+    #sortable tr:nth-child(even){background-color: #f2f2f2;}
+
+    #sortable tr:hover {background-color: #ddd;}
+
+    #sortable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+    }
+  
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
+</head>
+<body>
+  <table style="border-style: solid; border-color: black;" id="sortable">
+    <thead>
+        <tr>
+            <th>
+                No
+            </th>
+            <th>
+                Nama
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+<div>
+  Last Array : <span id="lastarray"></span>
+</div>
+<div>
+  New Array : <span id="newarray"></span>
+</div>
+
+<script>
+	
+  $( function() {
+    const arrayMoveMutateMethod = (array, from, to) => {
+        array.splice(to < 0 ? array.length + to : to, 0, array.splice(from, 1)[0]);
+    };
+    
+    const arrayMoveMethod = (array, from, to) => {
+        array = array.slice();
+        arrayMoveMutateMethod(array, from, to);
+        return array;
+    };
+    var murid = [
+		{no:1,name:"Budi"},
+		{no:2,name:"Adi"},
+		{no:3,name:"Ani"},
+		{no:4,name:"Rudi"},
+		{no:5,name:"Syahril"},
+		{no:6,name:"Joko"},
+		{no:7,name:"Ayu"},
+		{no:8,name:"Beni"},
+		{no:9,name:"Ari"},
+		{no:10,name:"Roni"},
+		{no:11,name:"Ridwan"},
+	]
+	var listtop = ""
+	for (var i=0; i<murid.length; i++){
+		listtop += '<tr class="ui-state-default">'+
+            '<td>'+murid[i].no+'</td>'+
+            '<td>'+murid[i].name+'</td></tr>';
+	}
+	$("#sortable tbody").html(listtop);
+    $('#sortable tbody').sortable({
+        start: function(event, ui) {
+            var start_pos = ui.item.index();
+            ui.item.data('start_pos', start_pos);
+            $("#lastarray").text(JSON.stringify(murid))
+        },
+        change: function(event, ui) {
+            var start_pos = ui.item.data('start_pos');
+            var index = ui.placeholder.index();            
+        },
+        update: function(event, ui) {
+            var start_pos = ui.item.data('start_pos');
+            var index = ui.item.index();
+            murid = arrayMoveMethod(murid,start_pos,index)
+            $("#newarray").text(JSON.stringify(murid))
+        }
+    });
+    $( "#sortable tbody" ).disableSelection();
+  } );
+</script>
+ 
+ 
+</body>
+</html>
