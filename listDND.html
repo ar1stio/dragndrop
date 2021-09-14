@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Sortable - Default functionality</title>
+  <title>List Drag N Drop with Last Array And New Array</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
   <style>
@@ -22,6 +22,10 @@
   <ul id="sortable">
     
   </ul>
+</div>
+<div>
+  Last Array : <span id="lastarray"></span>
+  New Array : <span id="newarray"></span>
 </div>
 
 <script>
@@ -56,13 +60,13 @@
 	for (var i=0; i<topeleven.length; i++){
 		listtop += '<li class="ui-state-default"><span>'+topeleven[i].no+'</span>'+topeleven[i].name+'</li>';
 	}
-console.log(listtop)
 	$("#sortable").html(listtop);
     $('#sortable').sortable({
         start: function(event, ui) {
             var start_pos = ui.item.index();
             ui.item.data('start_pos', start_pos);
             $(this).attr('data-previndex', ui.item.index());
+            $("#lastarray").text(JSON.stringify(topeleven))
         },
         change: function(event, ui) {
             var start_pos = ui.item.data('start_pos');
@@ -78,7 +82,7 @@ console.log(listtop)
             var index = ui.item.index();
             var oldIndex = $(this).attr('data-previndex');            
             topeleven = arrayMoveMethod(topeleven,start_pos,index)
-            console.log(topeleven)
+            $("#newarray").text(JSON.stringify(topeleven))
             $('#sortable li').removeClass('highlights');
             $(this).removeAttr('data-previndex');
         }
