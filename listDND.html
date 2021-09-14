@@ -4,33 +4,88 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>jQuery UI Sortable - Default functionality</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
   <style>
   #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
   #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
   #sortable li span { position: absolute; margin-left: -1.3em; }
+  .highlights{
+	background-color: red;
+  }
   </style>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
-  } );
-  </script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
 </head>
 <body>
- 
-<ul id="sortable">
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
-</ul>
+<div style="border-style: solid; border-color: black;">
+  <ul id="sortable">
+    
+  </ul>
+</div>
+
+<script>
+	
+  $( function() {
+    const arrayMoveMutateMethod = (array, from, to) => {
+        array.splice(to < 0 ? array.length + to : to, 0, array.splice(from, 1)[0]);
+    };
+    
+    const arrayMoveMethod = (array, from, to) => {
+        // await sendDisplayOrder(array[from].id,to)
+        // setDND(array[from].id)
+        array = array.slice();
+        arrayMoveMutateMethod(array, from, to);
+        return array;
+    };
+    //$( "#sortable" ).sortable();
+    var topeleven = [
+		{no:1,name:"Kasper Schmeichel"},
+		{no:2,name:"Trent Alexander Arnold"},
+		{no:3,name:"Raphael Varane"},
+		{no:4,name:"Virgil Van Dijk"},
+		{no:5,name:"Luke Shaw"},
+		{no:6,name:"Muhammad Salah"},
+		{no:7,name:"Bruno Fernandes"},
+		{no:8,name:"Paul Pogba"},
+		{no:9,name:"Cristiano Ronaldo"},
+		{no:10,name:"Edison Cavani"},
+		{no:11,name:"Gabriel Jesus"},
+	]
+	var listtop = ""
+	for (var i=0; i<topeleven.length; i++){
+		listtop += '<li class="ui-state-default"><span>'+topeleven[i].no+'</span>'+topeleven[i].name+'</li>';
+	}
+console.log(listtop)
+	$("#sortable").html(listtop);
+    $('#sortable').sortable({
+        start: function(event, ui) {
+            var start_pos = ui.item.index();
+            ui.item.data('start_pos', start_pos);
+            $(this).attr('data-previndex', ui.item.index());
+        },
+        change: function(event, ui) {
+            var start_pos = ui.item.data('start_pos');
+            var index = ui.placeholder.index();
+            if (start_pos < index) {
+                $('#sortable li:nth-child(' + index + ')').addClass('highlights');
+            } else {
+                $('#sortable li:eq(' + (index + 1) + ')').addClass('highlights');
+            }
+        },
+        update: function(event, ui) {
+            var start_pos = ui.item.data('start_pos');
+            var index = ui.item.index();
+            var oldIndex = $(this).attr('data-previndex');            
+            topeleven = arrayMoveMethod(topeleven,start_pos,index)
+            console.log(topeleven)
+            $('#sortable li').removeClass('highlights');
+            $(this).removeAttr('data-previndex');
+        }
+    });
+    $( "#sortable" ).disableSelection();
+  } );
+</script>
  
  
 </body>
