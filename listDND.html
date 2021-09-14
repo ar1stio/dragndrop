@@ -38,13 +38,10 @@
     };
     
     const arrayMoveMethod = (array, from, to) => {
-        // await sendDisplayOrder(array[from].id,to)
-        // setDND(array[from].id)
         array = array.slice();
         arrayMoveMutateMethod(array, from, to);
         return array;
     };
-    //$( "#sortable" ).sortable();
     var topeleven = [
 		{no:1,name:"Kasper Schmeichel"},
 		{no:2,name:"Trent Alexander Arnold"},
@@ -67,7 +64,6 @@
         start: function(event, ui) {
             var start_pos = ui.item.index();
             ui.item.data('start_pos', start_pos);
-            $(this).attr('data-previndex', ui.item.index());
             $("#lastarray").text(JSON.stringify(topeleven))
         },
         change: function(event, ui) {
@@ -82,11 +78,9 @@
         update: function(event, ui) {
             var start_pos = ui.item.data('start_pos');
             var index = ui.item.index();
-            var oldIndex = $(this).attr('data-previndex');            
             topeleven = arrayMoveMethod(topeleven,start_pos,index)
             $("#newarray").text(JSON.stringify(topeleven))
             $('#sortable li').removeClass('highlights');
-            $(this).removeAttr('data-previndex');
         }
     });
     $( "#sortable" ).disableSelection();
